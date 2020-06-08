@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search_Result</title>
+    <script>
+        function func1()
+        {
+            var val1=document.getElementById("bus1").value;
+            // alert(val1);
+            location.href='bus_chart/<%=mobile%>/'+val1+'/<%=dt%>';
+        }
+    </script>
+</head>
+<body>
+    <h3>
+    <%= org %>  ==>  <%= dst %>  
+    </h3>
+    <h4>Date - <%= date %></h4>
+    <%if(buses.length==0){%>
+        <br><h1>NO BUSES FOUND</h1>
+    <%}else{%>
+        <table border="2">
+            <tr>
+                <th>Name</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Category</th>
+                <th>Time</th>
+                <th>Price</th>
+                <th>Seats Left</th>
+                <th></th>
+            </tr>
+            <%for(let i=0;i<buses.length;i++){%>
+                <tr>
+                    <td><%=buses[i].agent_id%></td>
+                    <td><%=buses[i].origin%></td>
+                    <td><%=buses[i].dest%></td>
+                    <td><%=buses[i].category%></td>
+                    <td><%=buses[i].timing%></td>
+                    <td><%=buses[i].price%></td>
+                    <td><%=buses[i].capacity-buses[i].filled%></td>
+                    <td><button id="bus1" value="<%=buses[i].id%>" onclick="func1()">BOOK</button></td>
+                </tr>
+            <%}%>
+        </table>
+    <%}%>
+</body>
+</html>

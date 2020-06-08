@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking</title>
+    
+        <script>
+        function validateForm() {
+          var x = document.forms["booking_form"]["origin"].value;
+          var y = document.forms["booking_form"]["dest"].value;
+        //   console.log(x);
+        //   console.log(y);
+          if (x == y) {
+            alert("Orgin and Destination need to be different");
+            return false;
+          }
+        }
+        </script>
+</head>
+<body>
+    <form name="booking_form" action="/book/<%=mobile%>" onsubmit="return validateForm()" method="POST">
+        <label>Origin</label>
+        <select name="origin">
+            <%var len=cities.length;
+            for(var i=1;i<=len;i++){%>
+            <option value="<%=cities[i-1].city%>"><%=cities[i-1].city%></option>
+            <%}%>    
+        </select>
+        
+        <label>Destination</label>
+        <select name="dest">
+            <%var len=cities.length;
+            for(var i=1;i<=len;i++){%>
+            <option value="<%=cities[i-1].city%>"><%=cities[i-1].city%></option>
+            <%}%>    
+        </select>
+        <br><br>
+        <label>Date of Journey</label>
+        <input id="datefield" type="date" name="dot" min='<%=min_date%>' max='<%=max_date%>'>
+        <br><br>
+        <input type="submit" value="Search">        
+    </form>
+</body>
+</html>
