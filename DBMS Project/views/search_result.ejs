@@ -4,24 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search_Result</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
     <script>
-        function func1()
+        function func1(id)
         {
-            var val1=document.getElementById("bus1").value;
+            var val1=document.getElementById('bus'+id).value;
             // alert(val1);
             location.href='bus_chart/<%=mobile%>/'+val1+'/<%=dt%>';
         }
     </script>
 </head>
-<body>
-    <h3>
-    <%= org %>  ==>  <%= dst %>  
+<body class="container" style="background-color: rgb(247, 111, 111);font-family: cursive;">
+    <div class="container" style="background-color: rgb(248, 166, 95); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><h3 style="font-weight: bold; font-size: 300%; ">
+    <%= org %>  -  <%= dst %>  
     </h3>
     <h4>Date - <%= date %></h4>
+    </div>
     <%if(buses.length==0){%>
-        <br><h1>NO BUSES FOUND</h1>
+        <br><div class=container style="background-color: rgb(92, 112, 172);"><h1>NO BUSES FOUND</h1></div>
     <%}else{%>
-        <table border="2">
+        <table class="table table-hover table-striped">
+            <thead  class="thead-dark">
             <tr>
                 <th>Name</th>
                 <th>Origin</th>
@@ -32,8 +38,9 @@
                 <th>Seats Left</th>
                 <th></th>
             </tr>
+            </thead>
             <%for(let i=0;i<buses.length;i++){%>
-                <tr>
+                <tr class="table-info">
                     <td><%=buses[i].agent_id%></td>
                     <td><%=buses[i].origin%></td>
                     <td><%=buses[i].dest%></td>
@@ -41,7 +48,7 @@
                     <td><%=buses[i].timing%></td>
                     <td><%=buses[i].price%></td>
                     <td><%=buses[i].capacity-buses[i].filled%></td>
-                    <td><button id="bus1" value="<%=buses[i].id%>" onclick="func1()">BOOK</button></td>
+                    <td><button id="bus<%=buses[i].id%>" value="<%=buses[i].id%>" onclick="func1(<%=buses[i].id%>)">BOOK</button></td>
                 </tr>
             <%}%>
         </table>

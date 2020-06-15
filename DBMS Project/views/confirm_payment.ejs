@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing</title>
+    <script>
+        var label={};
+        function pay_type(mode){
+            if(mode=='UPI')
+            {
+                if(label['upi']==1)
+                return;
+                label['upi']=1;
+                var d=document.getElementById("upi_div")
+                var x=document.createElement("form");
+                x.setAttribute("method","POST");
+                x.setAttribute("action",'http://192.168.43.80:3000/pay/upi');
+                x.setAttribute("name","upi");
+                y=document.createElement("input");
+                y.setAttribute("type","text");
+                y.setAttribute("placeholder","UPI-ID");
+                x.appendChild(y);
+                d.appendChild(x);
+                y=document.createElement("input")
+                y.setAttribute("type","submit");
+                y.setAttribute("value","Pay");
+                x.appendChild(y);
+            }
+            else if(mode=='paytm')
+            {
+                if(label['paytm']==1)
+                return;
+                label['paytm']=1;
+                var d=document.getElementById("paytm_div");
+                var x=document.createElement("form");
+                x.setAttribute("method","POST");
+                x.setAttribute("action",'http://192.168.43.80:3000/pay/paytm');
+                x.setAttribute("name","paytm");
+                y=document.createElement("input");
+                y.setAttribute("type","text");
+                y.setAttribute("placeholder","Name");
+                x.appendChild(y);
+                y=document.createElement("input");
+                y.setAttribute("type","text");
+                y.setAttribute("placeholder","Mobile No.");
+                x.appendChild(y);
+                d.appendChild(x);
+                y=document.createElement("input")
+                y.setAttribute("type","submit");
+                y.setAttribute("value","Pay");
+                x.appendChild(y);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1 style="color: red;">DO NOT REFRESH THIS PAGE</h1>
+    <h3>Date - <%=date%></h3>
+    <br><br>
+    <h4>Bus-  <%=bus%></h4><h4>Category- <%=type%></h4>
+    <br><br>
+    <h4>Seat Details:</h4>
+    <ul>
+        <%for(let i=0;i<seats.length;i++){%>
+            <li><%=seats[i]%></li>
+        <%}%>
+    </ul>
+    <br>
+    <b>Amount- <%=price%></b>
+    <br>
+    <h3>Payment type:</h3>
+    <div id="paytm_div">
+    <button onclick="pay_type('paytm')">Paytm</button>
+    </div>
+    <div id="upi_div">
+    <button onclick="pay_type('UPI')">UPI</button>
+    </div>
+</body>
+</html>

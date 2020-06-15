@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seat Chart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script>
         var label={};
@@ -22,15 +26,14 @@
             // var new_cost=(tg3.value-cost);
             // tg3.value=new_cost;
             cst-=cost;
-            tg3.innerHTML='<h4>Cost='+cst+'</h4>';
+            tg3.innerHTML='<span>'+cst+'</span>';
             var tg4=document.getElementById('seat_selected_'+id);
             tg4.remove();
             }
             else{
                 if(cnt==4){
-                setTimeout(() => {
                     alert('Cannot Book more than 4 seats in once');
-                }, 1000);
+                
                 return;
                 }
             var tg=document.getElementById("seats");
@@ -43,7 +46,7 @@
             var tg3=document.getElementById('cost');
             cst+=cost;
             cnt++;
-            tg3.innerHTML='<h4>Cost='+cst+'</h4>';
+            tg3.innerHTML='<span>'+cst+'</span>';
             var tg4=document.f1;
             tg4.innerHTML+='<input type="hidden" value="'+id+'" name="seat'+id+'" id="seat_selected_'+id+'">';
             }
@@ -64,20 +67,73 @@
 
      setTimeout(refresh, 10000);
 
+     function validateForm()
+     {
+       if(cnt==0)
+       {
+         alert('Please select seat');
+         return false;
+       }
+       return true;
+     }
+
      </script>
 <style>
-.box {
+
+body{
+	background:url(http://192.168.43.80:3000/images/bus_front.jpg) no-repeat center;
+  background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+	/* font-family: 'Open Sans', sans-serif !important; */
+}
+
+.front-indicator {
+  display:inline-flex;
+	margin:5px 28px 15px 41px;
+    background-color: #DEDEDE;
+    color: #000000;
+    text-align: center;
+    padding: 7px 7px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.main{
+    background:rgba(255, 255, 255, 0.90);
+}
+
+.SEATER{
   display:inline-block;
-  height: 20px;
-  width: 50px;
+  height: 40px;
+  width: 40px;
   border: 1px solid black;
   clear: both;
 }
 
-.gallery {
+.SLEEPER{
+  display:inline-block;
+  height: 80px;
+  width: 40px;
+  border: 1px solid black;
+  clear: both;
+}
+
+.SEATERgallery {
   display:inline-block;
   height: 20px;
   width: 75px;
+  border: 1px;
+  clear: both;
+}
+
+.SLEEPERgallery{
+  display:inline-block;
+  height: 50px;
+  width: 50px;
   border: 1px;
   clear: both;
 }
@@ -93,23 +149,84 @@
 .white {
   background-color: white;
 }
+
+div.seatCharts-seat {
+	color: #FFFFFF;
+	cursor: pointer;	
+}
+div.seatCharts-row {
+	height: 35px;
+}
+div.seatCharts-seat.available {
+	background-color:green;
+}
+div.seatCharts-seat.selected {
+	background-color: blue;
+}
+div.seatCharts-seat.unavailable {
+	background-color:red;
+}
+div.seatCharts-container {
+    border-right: 1px solid #adadad;
+    width: 50%;
+    float: left;
+}
+
+div.seatCharts-cell {
+	color: #182C4E;
+    height: 32px;
+    width: 32px;
+    line-height: 31px;	
+}
+div.seatCharts-legend {
+	padding-left: 0px;
+
+}
+ul.seatCharts-legendList {
+	padding-left: 0px;
+}
+span.seatCharts-legendDescription {
+    margin-left: 5px;
+    line-height: 35px;
+    font-size: 14px;
+}
 </style>
 </head>
-<body>
+<body class="container">
+  <div class="container">
+  <div class="row">
+    <h1 style="font-family: fantasy;color:purple;"><%=busdata[0].agent_id%></h1>
+  </div><div class="row">
+    <h3 style="font-family: fantasy;color:tomato;"><%=busdata[0].origin%></h3>
+    <h3 style="font-family: fantasy;color:tomato;"> - <%=busdata[0].dest%></h3>
+  </div>
+  </div>
+<div class="row main" style="width: 100%;">
+<div class="col-sm">
+<div class=front-indicator><h3>Front</h3></div>
 <%var t1=layout.length;t2=layout[0].length;
 for(var i=0;i<t1;i++){%><p><%for(var j=0;j<t2;j++){%>
-<%if(layout[i][j]=='b'){%><span class='box red'><%=seat_id[i+'_'+j]%></span>
-<%}else if(layout[i][j]=='_'){%><span class='gallery'>&nbsp;</span>
-<%}else{%><span id="seat_<%=seat_id[i+'_'+j]%>" class='box green' onclick="func1(<%=seat_id[i+'_'+j]%>,<%=busdata[0].price%>)"><%=seat_id[i+'_'+j]%></span>
+<%if(layout[i][j]=='b'){%><span class='<%=busdata[0].category%> red'><%=seat_id[i+'_'+j]%></span>
+<%}else if(layout[i][j]=='_'){%><span class='<%=busdata[0].category%>gallery'>&nbsp;</span>
+<%}else{%><span id="seat_<%=seat_id[i+'_'+j]%>" class='<%=busdata[0].category%> green' onclick="func1(<%=seat_id[i+'_'+j]%>,<%=busdata[0].price%>)"><%=seat_id[i+'_'+j]%></span>
 <%}}%></p><%}%>
-<div id="seats">
-    <span><b>Seats= </b></span>
 </div>
-<div id="cost">
-    <h4>Cost=0</h4>
-</div>
+<div class="col-sm">
+  <ul style="margin-top: 50%;">
+    <li ><div class="seatCharts-seat seatCharts-cell available"></div><span >Available Seats</span></li>
+    <li ><div class="seatCharts-seat seatCharts-cell selected "></div><span >Selected Seats</span></li>
+    <li><div class="seatCharts-seat seatCharts-cell unavailable "></div><span>Booked Seats</span></li>
+</ul>
+<h3 style="color: purple;"><b>Seats= </b>
+<span  style="color:red;" id="seats">
+</span>
+</h3>
+<h3 style="color:purple">Cost=
+<span style="color: red;" id="cost" >
+</span></h3>
 <form name="f1" method="POST" action="/book/final_page/<%=mobile%>/<%=busdata[0].id%>/" onsubmit="return validateForm()">
-<input type="submit" value="Proceed to Checkout">
+<input class="btn btn-primary" type="submit" value="Proceed to Checkout">
 </form>
+</div></div>
 </body>
 </html>

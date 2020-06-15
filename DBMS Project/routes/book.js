@@ -56,7 +56,7 @@ router.get('/:mobile',function(req,res){
 
 router.post('/:mobile',(req,res)=>{
     sess=req.session;
-    if(sess.Mobile!=req.params.mobile || req.body.dot>mx_dte || req.body.dot<mn_dte)
+    if(sess.Mobile!=req.params.mobile || req.body.dot>mx_dte || req.body.dot<mn_dte || req.body.origin==req.body.dest)
     {res.render('error.ejs',{error:'You are not allowed to view this page'});
     return;}
     var date=new Date(req.body.dot);
@@ -78,6 +78,7 @@ router.post('/:mobile',(req,res)=>{
     var  sql="CALL buses_on_route('"+req.body.origin+"','"+req.body.dest+"','"+req.body.dot+"','"+day+"');";
     console.log(sql);
     db.query(sql,(err,data)=>{
+        console.log(data);
         if(err)throw err;
         buses_on_route=Object.values(data[0]);
         sess=req.session;
@@ -124,6 +125,9 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
         var seat_id={};
         for(let i=0;i<data[0].length;i++)
         {seats.push(data[0][i].booked);label[seats[i]]=1;}
+        sess.bus_price=data[1][0].price;
+        sess.bus_name=data[1][0].agent_id;
+        sess.type=data[1][0].category;
         if(data[1][0].category=='AC SEATER'){
         for(var i=0;i<10;i++)
         {
@@ -152,6 +156,36 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
         layout.push(num);
         }
         }
+        else {
+            for(var i=0;i<6;i++)
+            {
+            var num='';
+            var crnt=1;
+            for(var j=0;j<4;j++){
+            if(crnt==2)
+            {
+                num+='_';
+                crnt++;
+                continue;
+            }
+            var tmp=i+'_'+j;
+            seat_id[tmp]=cnt;
+            if(label[cnt]==1)
+            {num+='b';crnt++;
+            cnt++;}
+            else 
+            {
+                num+='a';
+                cnt++;
+                crnt++;
+            }
+            }
+            // console.log(num);
+            layout.push(num);
+            }
+            }
+
+        
         
         // console.log(seat_id);
         // console.log(arr);
@@ -160,6 +194,16 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
 }
 });
 
+function lock_seat(mobile,id,date,seat_no)
+{
+    var sql="INSERT INTO `dbms_project`.`bookings` (`user`, `bus`, `dot`, `seat_no`) VALUES ('"+mobile+"', '"+id+"', '"+date+"', '"+seat_no+"');";
+    db.query(sql,function(err,data){
+        if(err)throw err;
+        console.log('inserted');
+        return;
+    });
+}
+
 router.post('/final_page/:mobile/:id',(req,res)=>{
     var sess=req.session;
     if(sess.Mobile!=req.params.mobile)
@@ -167,7 +211,11 @@ router.post('/final_page/:mobile/:id',(req,res)=>{
     return;}
     var date=sess.main_date;
     var arr=Object.values(req.body);
-    var total_seats=arr.length;
+    if(arr.length==0)
+    {
+        res.render(error.ejs,{error:'Seat Not Selected!'});
+        return ;
+    }
     var sql="CALL show_seats("+req.params.id+",'"+date+"');";
     // console.log(sql);
     db.query(sql,function(err,data){
@@ -186,18 +234,24 @@ router.post('/final_page/:mobile/:id',(req,res)=>{
                 return;
             }
         }
-
-        // var expirytime=Date(Date.now()).toString;
-        // expirytime=expirytime.toString();
-        // expirytime+=(10*60*1000);
-        // console.log(main_date);
-        // console.log(expirytime);
-        // console.log(' '+date+' ');
+        sess.seats_array=arr;
+        console.log(sess.seats_array);
+        sess.bus_id=req.params.id;
+        for(var i=0;i<arr.length;i++)
+        {
+            lock_seat(req.params.mobile,req.params.id,date,arr[i]);
+        }
         var final_date=sess.main_date;
         final_date+=' 23:59:59';
+        sess.final_date=final_date;
         // final_date+=((24*60*60)*1000);
         console.log(final_date);
-
+        price=sess.bus_price;
+        var amount=price*(arr.length);
+        sess.amount=amount;
+        price+=' x '+arr.length+' = '+amount;
+        res.render('confirm_payment.ejs',{seats:arr,date:date,bus:sess.bus_name,price:price,type:sess.type});
+        
     });
 });
 
