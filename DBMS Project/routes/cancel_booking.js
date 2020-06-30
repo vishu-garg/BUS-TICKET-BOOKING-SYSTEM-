@@ -2,19 +2,29 @@ var express=require('express');
 var router=express.Router();
 
 var db=require('../database');
-function do_delete(id,mobile,price)
+
+
+function cancel_seat(id,charge)
+{
+    var sql="UPDATE `dbms_project`.`bookings` SET amount='"+charge+"',status='CNCL' WHERE booking_id="+id+";";
+    db.query(sql,function(err,data){
+        if(err)throw err;
+        console.log('cancelled');
+        return;
+    });
+    console.log(sql+" ");
+}
+
+
+function do_delete(id,mobile,price,charge)
 {
     var sql="INSERT INTO REFUNDS (user_id,amount) values ('"+mobile+"',"+price+");";
     db.query(sql,(err,data)=>{
         if(err)throw err;
-        sql ='DELETE FROM BOOKINGS WHERE BOOKING_ID='+ id +';';
-        db.query(sql,(err,data)=>{
-            if(err)throw err;
-            console.log('deleted');
-            return;
-        });
+        cancel_seat(id,charge);
     });
 }
+
 
 router.get('/:id/:mobile/:price',(req,res)=>{
     sess=req.session;
@@ -23,10 +33,10 @@ router.get('/:id/:mobile/:price',(req,res)=>{
         res.render('error.ejs',{error:'Unauthorized user!'});
         return;
     }
-    var sql1='SELECT COUNT(*) AS ticket_num FROM BOOKINGS WHERE booking_id='+req.params.id+';';
+    var sql1='SELECT status FROM BOOKINGS WHERE booking_id='+req.params.id+';';
     db.query(sql1,(err,data)=>{
     console.log(data);
-    if(data[0].ticket_num==0)
+    if(data[0].status!='C')
     {
         res.render('error.ejs',{error:'Ticket already cancelled...!'});
         return;
@@ -86,7 +96,8 @@ router.get('/:id/:mobile/:price',(req,res)=>{
             price=(0.1)*(price);
             tag=90;
         }
-        do_delete(req.params.id,req.params.mobile,price);
+        charge = data[0][0].price-price;
+        do_delete(req.params.id,req.params.mobile,price,charge);
         res.render('deleted.ejs',{org:data[0][0].price,amount:price,tag:tag}); 
     });
     });

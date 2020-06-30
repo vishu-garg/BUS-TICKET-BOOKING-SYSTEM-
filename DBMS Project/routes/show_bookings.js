@@ -57,7 +57,7 @@ router.get('/:mobile',(req,res)=>{
             console.log(new Date('1/1/2011 '+data[0][i].timing));
         }
 
-        res.render('bookings.ejs',{data:data[0],label:label});
+        res.render('bookings.ejs',{data:data[0],label:label,usermobile:sess.Mobile,unm:sess.Name});
 
     });
 });

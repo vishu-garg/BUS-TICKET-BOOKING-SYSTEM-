@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <style>
+        .blink_me {
+        animation: blinker 2s linear infinite;
+        }
+
+        @keyframes blinker {
+        50% {
+        opacity: 0;
+        }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"><a class="navbar-brand" href="#"><img src="http://192.168.43.80:3000/images/bus_front.jpg" width="30" height="30" alt=""></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/admin_home/<%=type%>">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin_logout/">Logout</a>
+          </li>
+          </ul>
+          </div>
+    </nav>
+    
+    
+    <h6 class="blink_me" style="text-align: center;color: red;">Note:These stats don`t include cancelled tickets</h6>
+    
+    <br><br>
+
+    <div class="container">
+        <span style="text-align: left;">
+        <span>Sort By:</span>
+        <span><button onclick="sort_by_month()">Month</button></span>
+        <span><button onclick="sort_by_bus_id()">Bus_Id</button></span>
+        </span>
+        <span>
+        <span style="text-align: right;">
+            <form action='/show/sales/' method="POST">
+                <span>Specific City:</span>
+                <span><input type="text" name="city"></span>
+            </form>
+        </span>
+    </span>
+    </div>
+
+    <hr>
+    
+    <div class="container">
+    <canvas id="myChart"></canvas>
+    </div>
+    <br><br>
+    <!-- <div class="container"> -->
+        <div id='Total'></div>
+        <br><br>
+    <div class="container">
+     <canvas id="myChart2"></canvas>
+    </div>
+     <div id='Total2'></div>
+    
+    <!-- </div> -->
+    <script>
+    sort_by_month();
+    function sort_by_month(){
+    var ctx = document.getElementById('myChart');
+    var ctx2 = document.getElementById('myChart2');
+    var labels=Array();
+    var amount=Array();
+    var background=Array();
+    var border=Array();
+    var sum=0;
+    radius=Array();
+        <%for(let i=0;i<data.length;i++){%>
+            labels.push('<%=data[i].Month%>'+' <%=data[i].Year%>');
+            amount.push(<%=data[i].Amount%>);
+            sum+=<%=data[i].Amount%>;
+            background.push('red');
+            border.push(1);
+            radius.push(5);
+        <%}%>
+        console.log(sum);
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '',
+                data: amount,
+                backgroundColor: ['rgba(0,0,0,0)'],
+                borderColor: ['black'],
+                pointBorderColor:background,
+                pointRadius:radius,
+                pointBackgroundColor:background,
+                borderWidth: 3,
+                pointBorderWidth:border
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                    display: true,
+                    labelString: 'Amount'
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'Month'
+                    }  
+                }]
+            },
+            
+        title: {
+            display: true,
+            text: 'Sales/Month',
+            fontSize:30,
+            fontColor: 'black',
+            fontStyle:'bold'
+        }
+        }
+
+
+        
+    });
+    var tmp=document.getElementById('Total');
+    tmp.innerHTML='<span><b>Total Revenue:  </b></span><span>'+sum+' Rupees </span>';
+
+    var lab_tkt=Array();
+    var tkt=Array();
+    var background=Array();
+    var border=Array();
+    var sum_tkt=0;
+    radius=Array();
+        <%for(let i=0;i<data3.length;i++){%>
+            lab_tkt.push('<%=data3[i].Month%>'+' <%=data3[i].Year%>');
+            tkt.push(<%=data3[i].Tickets%>);
+            sum_tkt+=<%=data3[i].Tickets%>;
+            background.push('red');
+            border.push(1);
+            radius.push(5);
+        <%}%>
+        console.log(sum);
+
+    var myChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: lab_tkt,
+            datasets: [{
+                label: '',
+                data: tkt,
+                backgroundColor: ['rgba(0,0,0,0)'],
+                borderColor: ['black'],
+                pointBorderColor:background,
+                pointRadius:radius,
+                pointBackgroundColor:background,
+                borderWidth: 3,
+                pointBorderWidth:border
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                    display: true,
+                    labelString: 'Tickets'
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'Month'
+                    }  
+                }]
+            },
+            
+        title: {
+            display: true,
+            text: 'Tickets/Month',
+            fontSize:30,
+            fontColor: 'black',
+            fontStyle:'bold'
+        }
+        }
+
+
+        
+    });
+    var tmp=document.getElementById('Total2');
+    tmp.innerHTML='<span><b>Total Tickets:  </b></span><span>'+sum_tkt+' Tickets </span>';
+}
+
+
+    function sort_by_bus_id(){
+    var ctx = document.getElementById('myChart');
+    var ctx2 = document.getElementById('myChart2');
+    var labels=Array();
+    var amount=Array();
+    var background=Array();
+    var border=Array();
+    var sum=0;
+    radius=Array();
+        <%for(let i=0;i<data2.length;i++){%>
+            labels.push('<%=data2[i].bus_Id%>');
+            amount.push(<%=data2[i].Amount%>);
+            sum+=<%=data2[i].Amount%>;
+            background.push('red');
+            border.push(1);
+            radius.push(5);
+        <%}%>
+        console.log(sum);
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '',
+                data: amount,
+                backgroundColor: ['rgba(0,0,0,0)'],
+                borderColor: ['black'],
+                pointBorderColor:background,
+                pointRadius:radius,
+                pointBackgroundColor:background,
+                borderWidth: 3,
+                pointBorderWidth:border
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                    display: true,
+                    labelString: 'Amount'
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'Bus_Id'
+                    }  
+                }]
+            },
+            
+        title: {
+            display: true,
+            text: 'Sales/Bus',
+            fontSize:30,
+            fontColor: 'black',
+            fontStyle:'bold'
+        }
+        }
+        
+    });
+    var tmp=document.getElementById('Total');
+    tmp.innerHTML='<span><b>Total Revenue:  </b></span><span>'+sum+' Rupees </span>';
+    
+    var lab_tkt=Array();
+    var tkt=Array();
+    var background=Array();
+    var border=Array();
+    var sum_tkt=0;
+    radius=Array();
+        <%for(let i=0;i<data4.length;i++){%>
+            lab_tkt.push('<%=data4[i].bus_Id%>');
+            tkt.push(<%=data4[i].Tickets%>);
+            sum_tkt+=<%=data4[i].Tickets%>;
+            background.push('red');
+            border.push(1);
+            radius.push(5);
+        <%}%>
+        console.log(sum);
+
+    var myChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: lab_tkt,
+            datasets: [{
+                label: '',
+                data: tkt,
+                backgroundColor: ['rgba(0,0,0,0)'],
+                borderColor: ['black'],
+                pointBorderColor:background,
+                pointRadius:radius,
+                pointBackgroundColor:background,
+                borderWidth: 3,
+                pointBorderWidth:border
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                    display: true,
+                    labelString: 'Tickets'
+                    },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel:{
+                        display:true,
+                        labelString:'Bus_Id'
+                    }  
+                }]
+            },
+            
+        title: {
+            display: true,
+            text: 'Tickets/Bus',
+            fontSize:30,
+            fontColor: 'black',
+            fontStyle:'bold'
+        }
+        }
+
+
+        
+    });
+    var tmp=document.getElementById('Total2 Tickets');
+    tmp.innerHTML='<span><b>Total Tickets:  </b></span><span>'+sum_tkt+' Tickets </span>';
+
+}
+
+
+    </script>
+</body>
+</html>

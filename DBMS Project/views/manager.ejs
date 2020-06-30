@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEO</title>
+    <title>Manager</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
 
-    <script>
+   <script>
         function func2(type)
         {
+            if(type=='bus')
+            location.href='/addbus';
+            else 
             location.href='/add/'+type;
+            
         }
     </script>
 </head>
@@ -33,9 +37,8 @@
                   Add
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="/add/manager">Manager</a>
                   <a class="dropdown-item" href="/add/staff">Staff</a>
-                  <a class="dropdown-item" href="/addcity">New City</a>
+                  <a class="dropdown-item" href="/addbus">Bus</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -44,9 +47,11 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="/show/sales">Sales</a>
-                  <a class="dropdown-item" href="/show/cities_stats">Cities Statistics</a>
                   <a class="dropdown-item" href="/show/employee">Employee Details</a>
                 </div>
+              </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add_chart">Update Chart</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/admin_logout/">Logout</a>
@@ -55,7 +60,7 @@
         </div>
       </nav>
       <br><br>
-      <h1 style="font-family: lato;"><%=name%></h1>
-        <h4 style="text-transform: capitalize; font-family: lato;">(Chief Executive Officer)</h4>
+        <h1 style="font-family: lato;"><%=name%></h1>
+        <h4 style="text-transform: capitalize; font-family: lato;">(Manager <%=city[0]%><span style="text-transform:lowercase; font-family: lato;"><%=city.slice(1)%>) </span></h4>
 </body>
 </html>

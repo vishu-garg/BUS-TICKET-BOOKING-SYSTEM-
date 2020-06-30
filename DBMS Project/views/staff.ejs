@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEO</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -26,27 +26,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="/admin_home/manager">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/admin_home/staff">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Add
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="/add/manager">Manager</a>
-                  <a class="dropdown-item" href="/add/staff">Staff</a>
-                  <a class="dropdown-item" href="/addcity">New City</a>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Show
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="/show/sales">Sales</a>
-                  <a class="dropdown-item" href="/show/cities_stats">Cities Statistics</a>
-                  <a class="dropdown-item" href="/show/employee">Employee Details</a>
-                </div>
+            <li class="nav-item">
+              <a class="nav-link" href="/addbus">Add Bus</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add_chart">Update Chart</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/admin_logout/">Logout</a>
@@ -56,6 +42,6 @@
       </nav>
       <br><br>
       <h1 style="font-family: lato;"><%=name%></h1>
-        <h4 style="text-transform: capitalize; font-family: lato;">(Chief Executive Officer)</h4>
+      <h4 style="font-family: lato;">(<%=city[0]%><span style="text-transform:lowercase; font-family: lato;"><%=city.slice(1)%>) </span></h4>
 </body>
 </html>

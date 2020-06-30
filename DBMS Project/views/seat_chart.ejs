@@ -192,7 +192,32 @@ span.seatCharts-legendDescription {
 }
 </style>
 </head>
-<body class="container">
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#"><img src="http://192.168.43.80:3000/images/bus_front.jpg" width="30" height="30" alt=""></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://192.168.43.80:3000/bookings/<%= usermobile%>">My Bookings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+  <br><br>
+  <div class="container">
   <div class="container">
   <div class="row">
     <h1 style="font-family: fantasy;color:purple;"><%=busdata[0].agent_id%></h1>
@@ -203,13 +228,30 @@ span.seatCharts-legendDescription {
   </div>
 <div class="row main" style="width: 100%;">
 <div class="col-sm">
-<div class=front-indicator><h3>Front</h3></div>
+<%if(busdata[0].category=='AC SLEEPER' || busdata[0].category=='NON AC SLEEPER'){%>
+<div class=front-indicator style="border-style: solid;"><h3>LOWER</h3></div>
 <%var t1=layout.length;t2=layout[0].length;
-for(var i=0;i<t1;i++){%><p><%for(var j=0;j<t2;j++){%>
+for(var i=0;i<(t1/2);i++){%><p><%for(var j=0;j<t2;j++){%>
 <%if(layout[i][j]=='b'){%><span class='<%=busdata[0].category%> red'><%=seat_id[i+'_'+j]%></span>
 <%}else if(layout[i][j]=='_'){%><span class='<%=busdata[0].category%>gallery'>&nbsp;</span>
 <%}else{%><span id="seat_<%=seat_id[i+'_'+j]%>" class='<%=busdata[0].category%> green' onclick="func1(<%=seat_id[i+'_'+j]%>,<%=busdata[0].price%>)"><%=seat_id[i+'_'+j]%></span>
 <%}}%></p><%}%>
+</div><div class="col-sm" style="border-style: solid;border-top: white;border-bottom: white;">
+<div class=front-indicator style="border-style: solid;"><h3>UPPER</h3></div>
+<%for(var i=(t1/2);i<t1;i++){%><p><%for(var j=0;j<t2;j++){%>
+  <%if(layout[i][j]=='b'){%><span class='<%=busdata[0].category%> red'><%=seat_id[i+'_'+j]%></span>
+  <%}else if(layout[i][j]=='_'){%><span class='<%=busdata[0].category%>gallery'>&nbsp;</span>
+  <%}else{%><span id="seat_<%=seat_id[i+'_'+j]%>" class='<%=busdata[0].category%> green' onclick="func1(<%=seat_id[i+'_'+j]%>,<%=busdata[0].price%>)"><%=seat_id[i+'_'+j]%></span>
+  <%}}%></p><%}}%>
+  <%if(busdata[0].category=='AC SEATER' || busdata[0].category=='NON AC SEATER'){%>
+    <div class=front-indicator style="border-style: solid;"><h3>FRONT</h3></div>
+    <%var t1=layout.length;t2=layout[0].length;
+    for(var i=0;i<t1;i++){%><p><%for(var j=0;j<t2;j++){%>
+    <%if(layout[i][j]=='b'){%><span class='<%=busdata[0].category%> red'><%=seat_id[i+'_'+j]%></span>
+    <%}else if(layout[i][j]=='_'){%><span class='<%=busdata[0].category%>gallery'>&nbsp;</span>
+    <%}else{%><span id="seat_<%=seat_id[i+'_'+j]%>" class='<%=busdata[0].category%> green' onclick="func1(<%=seat_id[i+'_'+j]%>,<%=busdata[0].price%>)"><%=seat_id[i+'_'+j]%></span>
+    <%}}%></p><%}}%>
+    
 </div>
 <div class="col-sm">
   <ul style="margin-top: 50%;">
@@ -227,6 +269,7 @@ for(var i=0;i<t1;i++){%><p><%for(var j=0;j<t2;j++){%>
 <form name="f1" method="POST" action="/book/final_page/<%=mobile%>/<%=busdata[0].id%>/" onsubmit="return validateForm()">
 <input class="btn btn-primary" type="submit" value="Proceed to Checkout">
 </form>
-</div></div>
+</div></div></div>
+
 </body>
 </html>

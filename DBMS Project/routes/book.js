@@ -50,7 +50,7 @@ router.get('/:mobile',function(req,res){
         // var year=new Date(datetime).getFullYear();var month=new Date(datetime).getMonth();var dte=new Date(datetime).getDate();
         // console.log(month);
         // var dd_mm
-        res.render('booking_form.ejs',{mobile:req.params.mobile,cities:data,min_date:min_date,max_date:max_date});
+        res.render('booking_form.ejs',{mobile:req.params.mobile,cities:data,min_date:min_date,max_date:max_date,usermobile:sess.Mobile,unm:sess.Name});
     });
 });
 
@@ -94,7 +94,7 @@ router.post('/:mobile',(req,res)=>{
         }
         // chkd=true;
         // console.log(sess.date);
-        res.render('search_result.ejs',{buses:buses_on_route,org:req.body.origin,dst:req.body.dest,date:req.body.dot,dt:sess.date,mobile:req.params.mobile});
+        res.render('search_result.ejs',{buses:buses_on_route,org:req.body.origin,dst:req.body.dest,date:req.body.dot,dt:sess.date,mobile:req.params.mobile,usermobile:sess.Mobile,unm:sess.Name});
     });
 });
 
@@ -128,8 +128,9 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
         sess.bus_price=data[1][0].price;
         sess.bus_name=data[1][0].agent_id;
         sess.type=data[1][0].category;
-        if(data[1][0].category=='AC SEATER'){
-        for(var i=0;i<10;i++)
+        if(data[1][0].category=='AC SEATER' ||data[1][0].category=='NON AC SEATER'){
+        var tmp45=data[1][0].capacity/5;
+        for(var i=0;i<tmp45;i++)
         {
         var num='';
         var crnt=1;
@@ -157,8 +158,10 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
         }
         }
         else {
-            for(var i=0;i<6;i++)
+            var tmp45=data[1][0].capacity/3;
+            for(var i=0;i<tmp45;i++)
             {
+            if(i<(tmp45/2)){
             var num='';
             var crnt=1;
             for(var j=0;j<4;j++){
@@ -172,13 +175,60 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
             seat_id[tmp]=cnt;
             if(label[cnt]==1)
             {num+='b';crnt++;
-            cnt++;}
+            if(j==0)
+            cnt+=2;
+            else if(j==2)
+            cnt++;
+            else 
+            cnt+=3;
+            }
             else 
             {
                 num+='a';
+                if(j==0)
+                cnt+=2;
+                else if(j==2)
                 cnt++;
+                else 
+                cnt+=3;
                 crnt++;
             }
+            }
+            if(i+1==(tmp45/2))cnt=2;
+            }
+            else{
+                var num='';
+                var crnt=1;
+                for(var j=0;j<4;j++){
+                if(crnt==2)
+                {
+                    num+='_';
+                    crnt++;
+                    continue;
+                }
+                var tmp=i+'_'+j;
+                seat_id[tmp]=cnt;
+                if(label[cnt]==1)
+                {num+='b';crnt++;
+                if(j==0)
+                cnt+=3;
+                else if(j==2)
+                cnt++;
+                else 
+                cnt+=2;
+                }
+                else 
+                {
+                    num+='a';
+                    crnt++;
+                    if(j==0)
+                    cnt+=3;
+                    else if(j==2)
+                    cnt++;
+                    else 
+                    cnt+=2;
+                }
+                } 
             }
             // console.log(num);
             layout.push(num);
@@ -186,17 +236,17 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
             }
 
         
-        
+        console.log(layout.length);
         // console.log(seat_id);
         // console.log(arr);
-        res.render('seat_chart.ejs',{layout:layout,seat_id:seat_id,busdata:data[1],mobile:req.params.mobile});
+        res.render('seat_chart.ejs',{layout:layout,seat_id:seat_id,busdata:data[1],mobile:req.params.mobile,usermobile:sess.Mobile,unm:sess.Name});
     });
 }
 });
 
-function lock_seat(mobile,id,date,seat_no)
+function lock_seat(mobile,id,date,seat_no,amount)
 {
-    var sql="INSERT INTO `dbms_project`.`bookings` (`user`, `bus`, `dot`, `seat_no`) VALUES ('"+mobile+"', '"+id+"', '"+date+"', '"+seat_no+"');";
+    var sql="INSERT INTO `dbms_project`.`bookings` (`user`, `bus`, `dot`, `seat_no`,`amount`) VALUES ('"+mobile+"', '"+id+"', '"+date+"', '"+seat_no+"',"+amount+");";
     db.query(sql,function(err,data){
         if(err)throw err;
         console.log('inserted');
@@ -239,7 +289,7 @@ router.post('/final_page/:mobile/:id',(req,res)=>{
         sess.bus_id=req.params.id;
         for(var i=0;i<arr.length;i++)
         {
-            lock_seat(req.params.mobile,req.params.id,date,arr[i]);
+            lock_seat(req.params.mobile,req.params.id,date,arr[i],sess.bus_price);
         }
         var final_date=sess.main_date;
         final_date+=' 23:59:59';
@@ -250,7 +300,7 @@ router.post('/final_page/:mobile/:id',(req,res)=>{
         var amount=price*(arr.length);
         sess.amount=amount;
         price+=' x '+arr.length+' = '+amount;
-        res.render('confirm_payment.ejs',{seats:arr,date:date,bus:sess.bus_name,price:price,type:sess.type});
+        res.render('confirm_payment.ejs',{seats:arr,date:date,bus:sess.bus_name,price:price,type:sess.type,usermobile:sess.Mobile,unm:sess.Name});
         
     });
 });
