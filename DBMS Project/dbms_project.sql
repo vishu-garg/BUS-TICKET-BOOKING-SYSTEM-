@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `dbms_project`.`bookings` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 168
+AUTO_INCREMENT = 192
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -154,6 +154,30 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
+-- Table `dbms_project`.`ratings`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dbms_project`.`ratings` (
+  `user_id` VARCHAR(100) NOT NULL,
+  `bus_id` INT(11) NOT NULL,
+  `rating` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`, `bus_id`),
+  INDEX `rating_user_idx` (`user_id` ASC) VISIBLE,
+  INDEX `rating_bus_idx` (`bus_id` ASC) VISIBLE,
+  CONSTRAINT `rating_bus`
+    FOREIGN KEY (`bus_id`)
+    REFERENCES `dbms_project`.`buses` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `rating_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dbms_project`.`users` (`Mobile`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
 -- Table `dbms_project`.`refunds`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `dbms_project`.`refunds` (
@@ -168,10 +192,15 @@ CREATE TABLE IF NOT EXISTS `dbms_project`.`refunds` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 67
+AUTO_INCREMENT = 78
 DEFAULT CHARACTER SET = latin1;
 
 USE `dbms_project` ;
+
+-- -----------------------------------------------------
+-- Placeholder table for view `dbms_project`.`bus_rating`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dbms_project`.`bus_rating` (`rating` INT, `bus_id` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `dbms_project`.`revenue`
@@ -256,7 +285,7 @@ DELIMITER $$
 USE `dbms_project`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `show_bookings`(mobile varchar(255))
 BEGIN
-	SELECT t2.booking_id,t2.user,t1.price,t1.category,t1.agent_id,t1.origin,t1.dest,t1.timing,t2.seat_no,t2.dot FROM buses t1 INNER JOIN bookings t2 ON t1.id=t2.bus AND t2.user=mobile AND t2.status='C';
+	SELECT t2.booking_id,t2.user,t1.price,t1.id,t1.category,t1.agent_id,t1.origin,t1.dest,t1.timing,t2.seat_no,t2.dot FROM buses t1 INNER JOIN bookings t2 ON t1.id=t2.bus AND t2.user=mobile AND t2.status='C';
 END$$
 
 DELIMITER ;
@@ -274,6 +303,13 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- View `dbms_project`.`bus_rating`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `dbms_project`.`bus_rating`;
+USE `dbms_project`;
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `dbms_project`.`bus_rating` AS select round(avg(`dbms_project`.`ratings`.`rating`),0) AS `rating`,`dbms_project`.`ratings`.`bus_id` AS `bus_id` from `dbms_project`.`ratings` group by `dbms_project`.`ratings`.`bus_id`;
 
 -- -----------------------------------------------------
 -- View `dbms_project`.`revenue`
