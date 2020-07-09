@@ -31,25 +31,41 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="http://192.168.43.80:3000/bookings/<%= usermobile%>">My Bookings</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+        <%if(usermobile){%>
+          <li class="nav-item active">
+            <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
+            <a class="nav-link" href="http://192.168.43.80:3000/bookings/<%= usermobile%>">My Bookings</a>
           </li>
+          <li class="nav-item">
+              <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
+            </li>
+            <%}else{%>
+              <li class="nav-item active">
+              <a class="nav-link" href="http://192.168.43.80:3000/">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+            </li>
+            <%}%>
       </ul>
     </div>
   </nav>
-  <br><br>
+  <br>
+      <%if(error_messages){%>
+        <h3 class="alerts alert-danger"><%=error_messages%></h3>  
+        <%}%>
+        <%if(success_messages){%>
+          <h3 class="alerts alert-success"><%=success_messages%></h3> 
+        <%}%>
   <div class="container">
   <div class="container" style="background-color:red;"><h1 style="margin-left: 15%; font-weight:bold; font-family:fantasy; color:tan">SEARCH YOUR BUS...</h1></div>
   <div class="container" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; background-color:palegreen;">
+    <%if(mobile==undefined)mobile='guest'%>
     <form name="booking_form" action="/book/<%=mobile%>" onsubmit="return validateForm()" method="POST">
       <label>Origin</label>
         <select name="origin" class="form-control">

@@ -216,7 +216,13 @@ span.seatCharts-legendDescription {
       </ul>
     </div>
   </nav>
-  <br><br>
+  <br>
+      <%if(error_messages){%>
+        <h3 class="alerts alert-danger"><%=error_messages%></h3>  
+        <%}%>
+        <%if(success_messages){%>
+          <h3 class="alerts alert-success"><%=success_messages%></h3> 
+        <%}%>
   <div class="container">
   <div class="container">
   <div class="row">

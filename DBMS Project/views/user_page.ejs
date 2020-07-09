@@ -34,7 +34,13 @@
           </ul>
         </div>
       </nav>
-      <br><br>
+      <br>
+      <%if(error_messages){%>
+        <h3 class="alerts alert-danger"><%=error_messages%></h3>  
+        <%}%>
+        <%if(success_messages){%>
+          <h3 class="alerts alert-success"><%=success_messages%></h3> 
+        <%}%>
     <h1 style="font-family: fantasy; color: rgb(241, 98, 98);text-transform: uppercase;">
         Welcome: <%=username%>
     </h1>

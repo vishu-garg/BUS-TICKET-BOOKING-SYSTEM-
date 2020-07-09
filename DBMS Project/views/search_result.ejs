@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search_Result</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://bower_components/css-star-rating/dist/css/star-rating.css">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
@@ -13,11 +14,17 @@
         {
             var val1=document.getElementById('bus'+id).value;
             // alert(val1);
-            location.href='bus_chart/<%=mobile%>/'+val1+'/<%=dt%>';
+            location.href='http://192.168.43.80:3000/book/bus_chart/<%=mobile%>/'+val1+'/<%=dt%>/';
         }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .checked {
+      color: orange;
+    }
+    </style>
 </head>
-<body style="background-color: rgb(247, 111, 111);font-family: cursive;">
+<body style="background-color: rgb(247, 111, 111);font-family: lato;">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#"><img src="http://192.168.43.80:3000/images/bus_front.jpg" width="30" height="30" alt=""></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +33,7 @@
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
+            <%if(usermobile){%>
             <li class="nav-item active">
               <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
             </li>
@@ -38,10 +46,20 @@
               <li class="nav-item">
                 <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
               </li>
+              <%}else{%>
+                <li class="nav-item active">
+                <a class="nav-link" href="http://192.168.43.80:3000/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+              </li>
+              <%}%>
           </ul>
         </div>
       </nav>
       <br><br>
+
+
     <div class="container">
     <div class="container" style="background-color: rgb(248, 166, 95); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><h3 style="font-weight: bold; font-size: 300%; ">
     <%= org %>  -  <%= dst %>  
@@ -51,29 +69,37 @@
     <%if(buses.length==0){%>
         <br><div class=container style="background-color: rgb(92, 112, 172);"><h1>NO BUSES FOUND</h1></div>
     <%}else{%>
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped" style="overflow: auto;">
             <thead  class="thead-dark">
             <tr>
                 <th>Name</th>
-                <th>Origin</th>
-                <th>Destination</th>
                 <th>Category</th>
                 <th>Time</th>
                 <th>Price</th>
+                <th>Rating</th>
                 <th>Seats Left</th>
-                <th></th>
+                <%if(mobile){%>
+                <th></th><%}%>
             </tr>
             </thead>
             <%for(let i=0;i<buses.length;i++){%>
                 <tr class="table-info">
                     <td><%=buses[i].agent_id%></td>
-                    <td><%=buses[i].origin%></td>
-                    <td><%=buses[i].dest%></td>
                     <td><%=buses[i].category%></td>
                     <td><%=buses[i].timing%></td>
                     <td><%=buses[i].price%></td>
+                    <td>
+                    <%for(let j=0;j<ratings[buses[i].id];j++){%>
+                        <span class="fa fa-star checked"></span>
+                        <%}for(let j=ratings[buses[i].id];j<5;j++){%>
+                          <span class="fa fa-star"></span>
+                        <%}%>
+                    <bold>(<%=ratings[buses[i].id]%>/5)</bold>
+                    </td>
                     <td><%=buses[i].capacity-buses[i].filled%></td>
+                    <%if(mobile){%>
                     <td><button id="bus<%=buses[i].id%>" value="<%=buses[i].id%>" onclick="func1(<%=buses[i].id%>)">BOOK</button></td>
+                    <%}%>
                 </tr>
             <%}%>
         </table>

@@ -30,16 +30,18 @@ router.get('/:id/:mobile/:price',(req,res)=>{
     sess=req.session;
     if(req.params.mobile!=sess.Mobile)
     {
-        res.render('error.ejs',{error:'Unauthorized user!'});
-        return;
+        req.flash('error_messages','Invalid User');
+        res.redirect('/');
+        return ;
     }
     var sql1='SELECT status FROM BOOKINGS WHERE booking_id='+req.params.id+';';
     db.query(sql1,(err,data)=>{
     console.log(data);
     if(data[0].status!='C')
     {
-        res.render('error.ejs',{error:'Ticket already cancelled...!'});
-        return;
+        req.flash('error_messages','Ticket Already Cancelled');
+        res.redirect('/bookings/'+sess.Mobile);
+        return ;
     }
     // var date=new Date();
     // dat=date.toLocaleDateString();

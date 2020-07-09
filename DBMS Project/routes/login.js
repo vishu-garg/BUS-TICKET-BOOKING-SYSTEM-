@@ -24,13 +24,17 @@ router.post('/',function(req,res){
                 }
                 else 
                 {
-                    res.render('error.ejs',{error:'Wrong  Password'});
+                    req.flash('error_messages','Wrong Password');
+                    res.redirect('/');
+                    return ;
                 }
             });
         }
         else  
         {
-            res.render('error.ejs',{error:'Mobile Number Not Exits'});
+            req.flash('error_messages','Wrong Username');
+            res.redirect('/');
+            return ;
         }
     });
 });

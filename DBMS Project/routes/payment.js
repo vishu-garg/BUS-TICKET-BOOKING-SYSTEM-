@@ -20,7 +20,9 @@ router.post('/:type',(req,res)=>{
     {
         book_seats(sess.bus_id,sess.main_date,arr[i],final_date);
     }
-    res.render('success.ejs',{message:'YOUR PAYMENT RECIEVED'});
+    req.flash('success_messages','Your Seats Booked Succesfully !');
+    res.redirect('/');
+    return ;
 });
 
 module.exports=router;

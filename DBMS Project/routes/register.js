@@ -10,9 +10,10 @@ router.post('/',function(req,res){
         if(err)throw err;
         if(data[0].prev!=0)
         {
-            console.log(data[0].prev);
-
-            res.render('error.ejs',{error:'User Already Exits'});
+            // console.log(data[0].prev);
+            req.flash('error_messages','User Already Exits');
+            res.redirect('/');
+            return ;
         }
         else 
         {
