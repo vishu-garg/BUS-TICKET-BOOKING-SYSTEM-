@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search_Result</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+
+
+<link rel="stylesheet" href="/stylesheets/bus_gallery.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css' rel='stylesheet' />
+
+<style>
+ 
+
+</style>
+
+</head>
+<body font-family: lato;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#"><img src="http://192.168.43.80:3000/images/bus_front.jpg" width="30" height="30" alt=""></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <%if(usermobile){%>
+            <li class="nav-item active">
+              <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://192.168.43.80:3000/bookings/<%= usermobile%>">My Bookings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
+              </li>
+              <%}else{%>
+                <li class="nav-item active">
+                <a class="nav-link" href="http://192.168.43.80:3000/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+              </li>
+              <%}%>
+          </ul>
+        </div>
+      </nav>
+      <br><br>
+      <%if(error_messages){%>
+      <h3 class="alerts alert-danger"><%=error_messages%></h3>  
+      <%}%>
+      <%if(success_messages){%>
+        <h3 class="alerts alert-success"><%=success_messages%></h3> 
+      <%}%>
+
+
+
+      <div class="container">
+        <div class="row">
+          <h1 style="font-family: fantasy;color:purple;"><%=bus_details[0].agent_id%></h1>
+        </div><div class="row">
+          <h3 style="font-family: fantasy;color:tomato;"><%=bus_details[0].origin%></h3>
+          <h3 style="font-family: fantasy;color:tomato;"> - <%=bus_details[0].dest%></h3>
+        </div>
+        </div>
+
+
+      <%if(total_images>0){%>
+    <div class="container">
+    <image>
+        <!-- Images used to open the lightbox -->
+        <h3 style="text-align: center; font-family: lato; font-weight: bold;"><u style="color: red;">I</u><u style="color:blue;">M</u><u style="color: green">A</u><u style="color: brown">G</u><u style="color: rebeccapurple;">E</u><u style="color: orange">S</u></h3>
+<div class="row">
+        <% var cnt=0;for(let i=0;i<Math.min(review_details.length,2);i++){if(review_details[i].image_url){ cnt++;%>
+        <div class="col-sm-2" style="margin: 5px;">
+      <img src="<%=review_details[i].image_url%>" style="height: 15vh;" onclick="openModal();currentSlide(<%=cnt%>)" class="hover-shadow">
+    </div>
+    <%}}%>
+    
+</div>
+<div style="color:red;">Click on Images to see more images</div>
+  <!-- The Modal/Lightbox -->
+
+  <div id="myModal" class="modal">
+    <span class="close cursor" onclick="closeModal()">&times;</span>
+    <div class="modal-content">
+  
+        <%var cnt=1 ; for(let i=0;i<review_details.length;i++){if(review_details[i].image_url){%>
+            <div class="mySlides">
+                    <b class="btn btn-primary">Uploaded by : </b><span style="font-weight: bold;"><%=review_details[i].Name%></span>
+                    <span>(<%=review_details[i].created_at%>)</span>
+                    <div class="container">
+                      <img src="<%=review_details[i].image_url%>" style="width: 100%;  max-height: 80vh;  position: relative;">
+                      <br>
+                    </div>
+            </div>
+        <%cnt++;}}%>
+
+      
+  
+      <!-- Next/previous controls -->
+      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  
+      <!-- Caption text -->
+      <!-- <div class="caption-container">
+        <p id="caption"></p>
+      </div> -->
+  
+      <!-- Thumbnail image controls -->
+      <!-- <div class="row">
+        </div> -->
+    </div>
+  </div>
+
+
+
+
+    
+    </div>
+    <%}%>
+
+<br>
+    
+
+<div class="container" style="text-align: center;">
+
+
+<h3 style="text-align: center; font-family: lato; font-weight: bold;">ROUTE :-</h3>
+
+
+  <div id='map' style="width: 50%; height: 50vh; display: inline-block;""></div>
+  
+  <div style="color: red;">
+    Red Marker = Origin(<%=bus_details[0].origin%>)
+  </div>
+  <div style="color: blue;">
+    Blue Marker = Destination(<%=bus_details[0].dest%>)
+  </div>
+  </div>
+  
+  <br>
+
+  <div class="container">
+    <h3 style="text-align: center; font-family: lato; font-weight: bold;">COMMENTS :-</h3>
+    <hr>
+    <%var cnt4=0;for(let i=0;i<review_details.length;i++){if((review_details[i].comment).length>0){cnt4++;%>
+      <div>
+        <b><%=cnt4%>)</b>
+        <h6 style="font-weight: bold;">By:<span style="color: blue;"> <%=review_details[i].Name%></span></h6><span><h6 style="text-align: right; color: red;"><%=review_details[i].created_at%></h6></span>
+        <p>
+          <%=review_details[i].comment%>
+        </p>
+      </div>
+      <hr>
+    <%}} if(cnt4==0){%>
+      <h6 style="color: blue; font-weight: bold;">No Comments</h6>
+      <%}%>
+
+  </div>
+
+
+
+
+
+
+  <script>
+
+
+
+mapboxgl.accessToken = 'pk.eyJ1IjoidmlzaHVnYXJnIiwiYSI6ImNrZGg0NWEzYjAwMDIyd3BkYjZycGh6aXcifQ.dS3wH0I9TkPJy82YoHKiHQ';
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v10',
+  center: [<%=origin_lat_long.longitude%>,<%=origin_lat_long.latitude%>], // starting position
+  zoom: 4
+});
+
+var marker = new mapboxgl.Marker(
+  options={
+      color:"red",
+    }
+)
+.setLngLat([<%=origin_lat_long.longitude%>,<%=origin_lat_long.latitude%>])
+.addTo(map);
+
+
+var marker = new mapboxgl.Marker(
+  options={
+      color:"blue",
+    }
+)
+.setLngLat([<%=dest_lat_long.longitude%>,<%=dest_lat_long.latitude%>])
+.addTo(map);
+
+
+// initialize the map canvas to interact with later
+var canvas = map.getCanvasContainer();
+
+// an arbitrary start will always be the same
+// only the end or destination will change
+var start = [<%=origin_lat_long.longitude%>,<%=origin_lat_long.latitude%>];
+
+// this is where the code for the next step will go
+
+
+function getRoute(end) {
+  // make a directions request using cycling profile
+  // an arbitrary start will always be the same
+  // only the end or destination will change
+  var start = [<%=origin_lat_long.longitude%>,<%=origin_lat_long.latitude%>];
+  var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+
+  // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+  var req = new XMLHttpRequest();
+  req.open('GET', url, true);
+  req.onload = function() {
+    var json = JSON.parse(req.response);
+    var data = json.routes[0];
+    var route = data.geometry.coordinates;
+    var geojson = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: route
+      }
+    };
+    // if the route already exists on the map, reset it using setData
+    if (map.getSource('route')) {
+      map.getSource('route').setData(geojson);
+    } else { // otherwise, make a new request
+      map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: geojson
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': 'blue',
+          'line-width': 5,
+          'line-opacity': 1
+        }
+      });
+    }
+    // add turn instructions here at the end
+  };
+  req.send();
+}
+
+map.on('load', function() {
+  // make an initial directions request that
+  // starts and ends at the same location
+
+  // Add starting point to the map
+
+  getRoute([<%=dest_lat_long.longitude%>,<%=dest_lat_long.latitude%>]);
+
+  map.addLayer({
+    id: 'point',
+    type: 'circle',
+    source: {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Point',
+            coordinates: start
+          }
+        }
+        ]
+      }
+    },
+    paint: {
+      'circle-radius': 5,
+      'circle-color': 'green'
+    }
+    
+  });
+  // this is where the code from the next step will go
+});
+
+
+
+  </script>
+
+  <script>
+        // Open the Modal
+        function openModal() {
+          document.getElementById("myModal").style.display = "block";
+        }
+        
+        // Close the Modal
+        function closeModal() {
+          document.getElementById("myModal").style.display = "none";
+        }
+        
+        var slideIndex = 1;
+        showSlides(slideIndex);
+        
+        // Next/previous controls
+        function plusSlides(n) {
+          showSlides(slideIndex += n);
+        }
+        
+        // Thumbnail image controls
+        function currentSlide(n) {
+          showSlides(slideIndex = n);
+        }
+        
+        function showSlides(n) {
+          var i;
+          var slides = document.getElementsByClassName("mySlides");
+          if (n > slides.length) {slideIndex = 1}
+          if (n < 1) {slideIndex = slides.length}
+          for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+          }
+          slides[slideIndex-1].style.display = "block";
+        }
+  </script>
+
+
+</body>
+</html>
+
+
+
+
+
+

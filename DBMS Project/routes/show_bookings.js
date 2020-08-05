@@ -10,8 +10,24 @@ router.get('/:mobile',(req,res)=>{
         res.redirect('/');
         return ; 
     }
-    var sql='call show_bookings('+req.params.mobile+');';
+    var sql="call show_bookings('"+req.params.mobile+"');";
+    // con
     db.query(sql,(err,data)=>{
+
+
+        if(err)
+        {
+            req.flash('error_messages','No Bookings');
+            res.redirect('/');
+            return;
+        }
+
+        // if(data==undefined)
+        // {
+        //     req.flash('error_messages','No Bookings');
+        //     res.redirect('/');
+        // }
+
         // console.log(data);
 
         // for(let i=0;i<data[0].length;i++)
@@ -49,7 +65,9 @@ router.get('/:mobile',(req,res)=>{
         var date=new Date().toDateString();
         var tme2=new Date().getTime();
         label={};
+        
         // console.log(date);
+
         for(let i=0;i<data[0].length;i++)
         {
             var tme3=new Date(data[0][i].dot).getTime();

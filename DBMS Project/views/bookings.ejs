@@ -106,9 +106,9 @@
                 <td><%=data[i].dest%></td>
                 <td><%=data[i].seat_no%></td>
                 <%if(label[i]==1){%>
-                <td><button class="btn btn-primary" onclick="do_delete(<%=data[i].booking_id%>,<%=data[i].user%>,<%=data[i].price%>)">CANCEL</button></td>
+                <td><button class="btn btn-primary" onclick="do_delete(<%=data[i].booking_id%>,'<%=data[i].user%>',<%=data[i].price%>)">CANCEL</button></td>
                 <%}else{%>
-                <td>-</td>
+                <td>COMPLETED</td>
                 <%}%>
                 <%if(label[i]==1){%>
                   <td>-</td>

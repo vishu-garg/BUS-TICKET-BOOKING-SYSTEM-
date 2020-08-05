@@ -56,6 +56,7 @@ var tg1=document.getElementById('frm1');
     var f=document.createElement("form");
     f.setAttribute('method','post');
     f.setAttribute('action','/thanks');
+    f.setAttribute('enctype',"multipart/form-data");
     f.setAttribute('id','frm1');
 
     var tg=document.getElementById('modalbody');
@@ -65,8 +66,9 @@ var tg1=document.getElementById('frm1');
 
     f1.innerHTML+='<input type="hidden" name="stars" value='+rating+'>';
     f1.innerHTML+='<input type="hidden" name="bus_id" value='+bus_id+'>';
-    f1.innerHTML+='<textarea type="text" style="font-size: 0.78rem" class="md-textarea form-control py-0" placeholder="Write us what can we improve" rows="3"></textarea><button id="voteSubmitButton" type="submit" class="btn btn-sm btn-primary">Submit!</button>';
-
+    f1.innerHTML+='<br><textarea type="text" style="font-size: 0.78rem"  class="md-textarea form-control py-0" name="comment" placeholder="Write us what can we improve" rows="3"></textarea>';
+    f1.innerHTML+='<br><bold><label for="bus_image" style="font-family:lato; color:red;">Add Image</label></bold> <input id="bus_image" type="file" style="background-color:#b9e4e6; font-family: lato;font-size: 0.9rem;"  class="form-control" name="image" accept="image/*" >';
+    f1.innerHTML+='<br><button id="voteSubmitButton" type="submit" class="btn btn-sm btn-primary">Submit!</button>';
 
 
     // $('#frm1').append('<input type="hidden" name="stars" value='+rating+'>');

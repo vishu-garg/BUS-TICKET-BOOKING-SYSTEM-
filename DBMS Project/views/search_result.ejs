@@ -84,7 +84,7 @@
             </thead>
             <%for(let i=0;i<buses.length;i++){%>
                 <tr class="table-info">
-                    <td><%=buses[i].agent_id%></td>
+                    <td style="text-align: center;"><%=buses[i].agent_id%><br><a href="/bus_info/<%=buses[i].id%>">More Info</a></td>
                     <td><%=buses[i].category%></td>
                     <td><%=buses[i].timing%></td>
                     <td><%=buses[i].price%></td>
