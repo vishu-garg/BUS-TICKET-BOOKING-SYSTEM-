@@ -15,7 +15,7 @@ router.get('/',(req,res)=>{
 
 router.post('/',(req,res)=>{
     var city="'"+req.body.city+"'";
-    var sql1="SELECT COUNT(*) AS CNT FROM CITIES WHERE city="+city+";";
+    var sql1="SELECT COUNT(*) AS CNT FROM cities WHERE city="+city+";";
     db.query(sql1,(err,data1)=>{
     // console.log(data1);
     if(data1[0].CNT!=0)
@@ -23,7 +23,7 @@ router.post('/',(req,res)=>{
         res.render('error.ejs',{error:'City already present'});
         return;
     }
-    var sql="INSERT INTO CITIES (`city`) VALUES("+city+");";
+    var sql="INSERT INTO cities (`city`) VALUES("+city+");";
     console.log(sql);
     db.query(sql,(err,data)=>{
         if(err)

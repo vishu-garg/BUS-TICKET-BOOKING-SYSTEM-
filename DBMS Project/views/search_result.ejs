@@ -14,7 +14,7 @@
         {
             var val1=document.getElementById('bus'+id).value;
             // alert(val1);
-            location.href='http://192.168.43.80:3000/book/bus_chart/<%=mobile%>/'+val1+'/<%=dt%>/';
+            location.href='/book/bus_chart/<%=mobile%>/'+val1+'/<%=dt%>/';
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -24,9 +24,9 @@
     }
     </style>
 </head>
-<body style="background-color: rgb(247, 111, 111);font-family: lato;">
+<body style="background-color: lightskyblue; font-family: lato;">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><img src="http://192.168.43.80:3000/images/bus_front.jpg" width="30" height="30" alt=""></a>
+        <a class="navbar-brand" href="#"><img src="/images/bus_front.jpg" width="30" height="30" alt=""></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,23 +35,23 @@
           <ul class="navbar-nav mr-auto">
             <%if(usermobile){%>
             <li class="nav-item active">
-              <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="http://192.168.43.80:3000/bookings/<%= usermobile%>">My Bookings</a>
+              <a class="nav-link" href="/bookings/<%= usermobile%>">My Bookings</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+                <a class="nav-link" href="/book/<%= usermobile%>">Find Bus</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
+                <a class="nav-link" href="/logout/">Logout</a>
               </li>
               <%}else{%>
                 <li class="nav-item active">
-                <a class="nav-link" href="http://192.168.43.80:3000/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+                  <a class="nav-link" href="/book/<%= usermobile%>">Find Bus</a>
               </li>
               <%}%>
           </ul>
@@ -61,7 +61,7 @@
 
 
     <div class="container">
-    <div class="container" style="background-color: rgb(248, 166, 95); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><h3 style="font-weight: bold; font-size: 300%; ">
+    <div class="container" style="background-color: rgb(248, 166, 95); font-family:lato;"><h3 style="font-weight: bold; font-size: 300%; ">
     <%= org %>  -  <%= dst %>  
     </h3>
     <h4>Date - <%= date %></h4>
@@ -69,40 +69,37 @@
     <%if(buses.length==0){%>
         <br><div class=container style="background-color: rgb(92, 112, 172);"><h1>NO BUSES FOUND</h1></div>
     <%}else{%>
-        <table class="table table-hover table-striped" style="overflow: auto;">
-            <thead  class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Time</th>
-                <th>Price</th>
-                <th>Rating</th>
-                <th>Seats Left</th>
-                <%if(mobile){%>
-                <th></th><%}%>
-            </tr>
-            </thead>
-            <%for(let i=0;i<buses.length;i++){%>
-                <tr class="table-info">
-                    <td style="text-align: center;"><%=buses[i].agent_id%><br><a href="/bus_info/<%=buses[i].id%>">More Info</a></td>
-                    <td><%=buses[i].category%></td>
-                    <td><%=buses[i].timing%></td>
-                    <td><%=buses[i].price%></td>
-                    <td>
+      
+        <ul class="list-group" style="padding-top: 3%;">
+        <%for(let i=0;i<buses.length;i++){%>
+               <li class="list-group-item" style="margin-top: 3%;"> 
+                  <div class="row">
+                    <b><%=i+1%>)</b> 
+                  <div class="col-md-auto"><div style="font-size: 20px; font-weight: bold; font-family: 'Times New Roman', Times, serif;"><%=buses[i].agent_id%></div><div style="font-size: 13px;">(<%=buses[i].category%>)</div></div>
+                    <div class="col-md-auto"><%=buses[i].timing%></div>
+                    <div class="col-md-auto">INR <b><%=buses[i].price%></b></div>
+                    <div class="col-md-auto"> 
                     <%for(let j=0;j<ratings[buses[i].id];j++){%>
                         <span class="fa fa-star checked"></span>
                         <%}for(let j=ratings[buses[i].id];j<5;j++){%>
                           <span class="fa fa-star"></span>
                         <%}%>
                     <bold>(<%=ratings[buses[i].id]%>/5)</bold>
-                    </td>
-                    <td><%=buses[i].capacity-buses[i].filled%></td>
+                    </div>
+                    <div class="col-md-auto"><div><%=buses[i].capacity-buses[i].filled%> Seats Available</div></div>
                     <%if(mobile){%>
-                    <td><button id="bus<%=buses[i].id%>" value="<%=buses[i].id%>" onclick="func1(<%=buses[i].id%>)">BOOK</button></td>
+                    <div class="col-md-auto"><button id="bus<%=buses[i].id%>" value="<%=buses[i].id%>" onclick="func1(<%=buses[i].id%>)">BOOK</button></div>
                     <%}%>
-                </tr>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                    <a href="/bus_info/<%=buses[i].id%>" style="color: red;">More Info</a>
+                  </div>
+                  </div>
+                </li>
             <%}%>
-        </table>
+            
+        </ul>
     <%}%>
     </div>
 </body>

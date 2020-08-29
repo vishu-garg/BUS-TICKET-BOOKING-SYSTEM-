@@ -9,7 +9,7 @@ $("#form1").submit(function (e) {
     d['pass']=document.forms["f1"]["admin_password"].value;
     $.ajax({
     type:"POST",
-    url:"http://192.168.43.80:6732/check",
+    url:"http://localhost:6732/check",
     data:JSON.stringify(d),
     contentType: "application/json; charset=utf-8",
     success:

@@ -7,7 +7,7 @@ var review_model=require('../models/comment');
 
 function get_bus_details(bus_id,callback)
 {
-    var sql="SELECT id,agent_id as name , origin, dest from BUSES where id="+bus_id+";";
+    var sql="SELECT id,agent_id as name , origin, dest from buses where id="+bus_id+";";
             db.query(sql,(err,result1)=>{
                 if (err) {
                     callback(err, null);

@@ -135,6 +135,7 @@ router.get('/chart/:dot/:origin/:dest',(req,res)=>{
     var  sql="CALL buses_on_route('"+req.body.origin+"','"+req.body.dest+"','"+req.body.dot+"','"+day+"');";
     console.log(sql);
     db.query(sql,(err,data)=>{
+        // console.log(sql);
         console.log(data);
         if(err)throw err;
         buses_on_route=Object.values(data[0]);
@@ -268,7 +269,7 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
         sess.bus_name=data[1][0].agent_id;
         sess.type=data[1][0].category;
         if(data[1][0].category=='AC SEATER' ||data[1][0].category=='NON AC SEATER'){
-        var tmp45=data[1][0].capacity/5;
+        var tmp45=Math.floor(data[1][0].capacity/5);
         for(var i=0;i<tmp45;i++)
         {
         var num='';
@@ -297,7 +298,8 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
         }
         }
         else {
-            var tmp45=data[1][0].capacity/3;
+            var tmp45=Math.floor(data[1][0].capacity/3);
+            console.log(tmp45);
             for(var i=0;i<tmp45;i++)
             {
             if(i<(tmp45/2)){
@@ -375,7 +377,8 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
             }
 
         
-        console.log(layout.length);
+        console.log(layout);
+        // console.log(data[1][0].category);
         // console.log(seat_id);
         // console.log(arr);
         res.render('seat_chart.ejs',{layout:layout,seat_id:seat_id,busdata:data[1],mobile:req.params.mobile,usermobile:sess.Mobile,unm:sess.Name});
@@ -385,7 +388,7 @@ router.get('/bus_chart/:mobile/:id/:date',(req,res)=>
 
 function lock_seat(mobile,id,date,seat_no,amount)
 {
-    var sql="INSERT INTO `dbms_project`.`bookings` (`user`, `bus`, `dot`, `seat_no`,`amount`) VALUES ('"+mobile+"', '"+id+"', '"+date+"', '"+seat_no+"',"+amount+");";
+    var sql="INSERT INTO `brkye07tma9pxxpzibpo`.`bookings` (`user`, `bus`, `dot`, `seat_no`,`amount`) VALUES ('"+mobile+"', '"+id+"', '"+date+"', '"+seat_no+"',"+amount+");";
     db.query(sql,function(err,data){
         if(err)throw err;
         console.log('inserted');

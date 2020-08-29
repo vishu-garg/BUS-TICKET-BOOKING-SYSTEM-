@@ -1,12 +1,13 @@
 var express=require('express');
 var router=express.Router();
-
+var ticket_model=require('../models/tickets');
 var db=require('../database');
+const { compareSync } = require('bcrypt');
 
 
 function cancel_seat(id,charge)
 {
-    var sql="UPDATE `dbms_project`.`bookings` SET amount='"+charge+"',status='CNCL' WHERE booking_id="+id+";";
+    var sql="UPDATE `bookings` SET amount='"+charge+"',status='CNCL' WHERE booking_id="+id+";";
     db.query(sql,function(err,data){
         if(err)throw err;
         console.log('cancelled');
@@ -15,10 +16,20 @@ function cancel_seat(id,charge)
     console.log(sql+" ");
 }
 
-
-function do_delete(id,mobile,price,charge)
+async function  delete_ticket(id)
 {
-    var sql="INSERT INTO REFUNDS (user_id,amount) values ('"+mobile+"',"+price+");";
+    await ticket_model.remove({ticket_id:id});
+    console.log('removed from mongo_db');
+    return;
+}
+
+
+async function do_delete(id,mobile,price,charge)
+{
+
+    await delete_ticket(id);
+
+    var sql="INSERT INTO refunds (user_id,amount) values ('"+mobile+"',"+price+");";
     db.query(sql,(err,data)=>{
         if(err)throw err;
         cancel_seat(id,charge);
@@ -34,8 +45,13 @@ router.get('/:id/:mobile/:price',(req,res)=>{
         res.redirect('/');
         return ;
     }
-    var sql1='SELECT status FROM BOOKINGS WHERE booking_id='+req.params.id+';';
+    var sql1='SELECT status FROM bookings WHERE booking_id='+req.params.id+';';
     db.query(sql1,(err,data)=>{
+    if(err)
+    {
+        console.log(err);
+        return;
+    }
     console.log(data);
     if(data[0].status!='C')
     {

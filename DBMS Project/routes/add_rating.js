@@ -49,7 +49,7 @@ router.post('/',server_upload.single('image'),(req,res,next)=>{
     var day = new Date().getDate();
     if(day<10)day=('0'+day);
     var tmp_date=(new Date().getFullYear())+'-'+month+'-'+day;
-    var sql = "INSERT INTO `dbms_project`.`ratings` (`user_id`, `bus_id`, `rating`,`created_at`) VALUES ('"+user_id+"',"+bus_id+","+stars+",'"+ tmp_date +"');";
+    var sql = "INSERT INTO `brkye07tma9pxxpzibpo`.`ratings` (`user_id`, `bus_id`, `rating`,`created_at`) VALUES ('"+user_id+"',"+bus_id+","+stars+",'"+ tmp_date +"');";
 
 
     // console.log(sql);
@@ -73,7 +73,7 @@ router.post('/',server_upload.single('image'),(req,res,next)=>{
             }
             // console.log(result1);
             can_rate[bus_id]=0;
-            db.query("UPDATE `dbms_project`.`ratings` SET `image_url` = '"+result1+"'WHERE user_id='"+user_id+"'AND bus_id="+bus_id+";",(err,res1)=>
+            db.query("UPDATE `brkye07tma9pxxpzibpo`.`ratings` SET `image_url` = '"+result1+"'WHERE user_id='"+user_id+"'AND bus_id="+bus_id+";",(err,res1)=>
             {
             if(err)
             {

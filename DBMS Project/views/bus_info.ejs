@@ -27,7 +27,7 @@
 </head>
 <body font-family: lato;">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><img src="http://192.168.43.80:3000/images/bus_front.jpg" width="30" height="30" alt=""></a>
+        <a class="navbar-brand" href="#"><img src="/images/bus_front.jpg" width="30" height="30" alt=""></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -36,23 +36,23 @@
           <ul class="navbar-nav mr-auto">
             <%if(usermobile){%>
             <li class="nav-item active">
-              <a class="nav-link" href="http://192.168.43.80:3000/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/home/<%=unm%>/<%=usermobile%>/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="http://192.168.43.80:3000/bookings/<%= usermobile%>">My Bookings</a>
+              <a class="nav-link" href="/bookings/<%= usermobile%>">My Bookings</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+                <a class="nav-link" href="/book/<%= usermobile%>">Find Bus</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="http://192.168.43.80:3000/logout/">Logout</a>
+                <a class="nav-link" href="/logout/">Logout</a>
               </li>
               <%}else{%>
                 <li class="nav-item active">
-                <a class="nav-link" href="http://192.168.43.80:3000/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="http://192.168.43.80:3000/book/<%= usermobile%>">Find Bus</a>
+                  <a class="nav-link" href="/book/<%= usermobile%>">Find Bus</a>
               </li>
               <%}%>
           </ul>
@@ -142,7 +142,7 @@
 <h3 style="text-align: center; font-family: lato; font-weight: bold;">ROUTE :-</h3>
 
 
-  <div id='map' style="width: 50%; height: 50vh; display: inline-block;""></div>
+  <div id='map' style="width: 75%; height: 50vh; display: inline-block;""></div>
   
   <div style="color: red;">
     Red Marker = Origin(<%=bus_details[0].origin%>)

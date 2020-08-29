@@ -58,7 +58,7 @@ router.get('/sales/',(req,res)=>{
 
 router.get('/cities_stats',(req,res)=>{
 var sess=req.session;
-var sql="SELECT Origin AS City , SUM(Amount) as Amount , SUM(Tickets) AS Tickets FROM BUSES JOIN REVENUE ON BUSES.ID=REVENUE.BUS_ID AND status='C' GROUP BY City;";
+var sql="SELECT Origin AS City , SUM(Amount) as Amount , SUM(Tickets) AS Tickets FROM buses JOIN revenue ON buses.ID=revenue.BUS_ID AND status='C' GROUP BY City;";
     db.query(sql,(err,data)=>{
         res.render('cities_stats.ejs',{data:data,type:sess.admin});
     })
